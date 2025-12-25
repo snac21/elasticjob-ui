@@ -17,8 +17,8 @@
 
 package org.apache.shardingsphere.elasticjob.lite.ui.config;
 
-import org.apache.commons.dbcp2.BasicDataSource;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
+import com.zaxxer.hikari.HikariDataSource;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -35,13 +35,13 @@ import java.util.Map;
 @Configuration
 public class DynamicDataSourceConfig {
     
-    public static final String DRIVER_CLASS_NAME = "spring.datasource.default.driver-class-name";
+    public static final String DRIVER_CLASS_NAME = "spring.datasource.driver-class-name";
     
-    public static final String DATASOURCE_URL = "spring.datasource.default.url";
+    public static final String DATASOURCE_URL = "spring.datasource.url";
     
-    public static final String DATASOURCE_USERNAME = "spring.datasource.default.username";
+    public static final String DATASOURCE_USERNAME = "spring.datasource.username";
     
-    public static final String DATASOURCE_PASSWORD = "spring.datasource.default.password";
+    public static final String DATASOURCE_PASSWORD = "spring.datasource.password";
     
     public static final String DEFAULT_DATASOURCE_NAME = "default";
     
@@ -65,8 +65,13 @@ public class DynamicDataSourceConfig {
         String url = environment.getProperty(DATASOURCE_URL);
         String username = environment.getProperty(DATASOURCE_USERNAME);
         String password = environment.getProperty(DATASOURCE_PASSWORD);
-        return DataSourceBuilder.create().driverClassName(driverName).type(BasicDataSource.class).url(url)
-            .username(username).password(password).build();
+        return DataSourceBuilder.create()
+                .type(HikariDataSource.class)
+                .driverClassName(driverName)
+                .url(url)
+                .username(username)
+                .password(password)
+                .build();
     }
     
     public static class DynamicDataSource extends AbstractRoutingDataSource {

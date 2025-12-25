@@ -17,8 +17,8 @@
 
 package org.apache.shardingsphere.elasticjob.lite.ui.web.controller;
 
-import org.apache.shardingsphere.elasticjob.lite.lifecycle.domain.JobBriefInfo;
-import org.apache.shardingsphere.elasticjob.lite.lifecycle.domain.ServerBriefInfo;
+import org.apache.shardingsphere.elasticjob.lifecycle.domain.JobBriefInfo;
+import org.apache.shardingsphere.elasticjob.lifecycle.domain.ServerBriefInfo;
 import org.apache.shardingsphere.elasticjob.lite.ui.service.JobAPIService;
 import org.apache.shardingsphere.elasticjob.lite.ui.util.SessionRegistryCenterConfiguration;
 import org.apache.shardingsphere.elasticjob.lite.ui.web.response.ResponseResult;

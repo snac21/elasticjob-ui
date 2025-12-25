@@ -17,16 +17,12 @@
 
 package org.apache.shardingsphere.elasticjob.lite.ui.domain;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -35,27 +31,20 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Entity
-@Table(name = "TASK_RESULT_STATISTICS")
+@TableName("TASK_RESULT_STATISTICS")
 public class TaskResultStatistics {
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableId
     private Long id;
     
-    @Column(name = "success_count", length = 11)
     private Long successCount;
     
-    @Column(name = "failed_count", length = 11)
     private Long failedCount;
     
-    @Column(name = "statistic_interval", length = 10)
     private String statisticInterval;
     
-    @Column(name = "statistics_time", nullable = false)
     private Date statisticsTime;
     
-    @Column(name = "creation_time", nullable = false)
     private Date creationTime = new Date();
     
     public TaskResultStatistics(final Long successCount, final Long failedCount) {

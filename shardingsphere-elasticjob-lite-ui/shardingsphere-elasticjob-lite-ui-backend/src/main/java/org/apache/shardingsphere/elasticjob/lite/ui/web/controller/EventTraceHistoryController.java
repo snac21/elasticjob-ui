@@ -25,10 +25,9 @@ import org.apache.shardingsphere.elasticjob.lite.ui.service.EventTraceHistorySer
 import org.apache.shardingsphere.elasticjob.lite.ui.util.SessionEventTraceDataSourceConfiguration;
 import org.apache.shardingsphere.elasticjob.lite.ui.web.response.ResponseResult;
 import org.apache.shardingsphere.elasticjob.lite.ui.web.response.ResponseResultUtil;
-import org.apache.shardingsphere.elasticjob.tracing.event.JobExecutionEvent;
-import org.apache.shardingsphere.elasticjob.tracing.event.JobStatusTraceEvent;
+import org.apache.shardingsphere.elasticjob.spi.tracing.event.JobExecutionEvent;
+import org.apache.shardingsphere.elasticjob.spi.tracing.event.JobStatusTraceEvent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,8 +60,7 @@ public final class EventTraceHistoryController {
      */
     @PostMapping(value = "/execution")
     public ResponseResult<BasePageResponse<JobExecutionEvent>> findJobExecutionEvents(@RequestBody final FindJobExecutionEventsRequest requestParams) {
-        Page<JobExecutionEvent> jobExecutionEvents = eventTraceHistoryService.findJobExecutionEvents(requestParams);
-        return ResponseResultUtil.build(BasePageResponse.of(jobExecutionEvents));
+        return ResponseResultUtil.build(eventTraceHistoryService.findJobExecutionEvents(requestParams));
     }
     
     /**
@@ -94,8 +92,7 @@ public final class EventTraceHistoryController {
      */
     @PostMapping(value = "/status")
     public ResponseResult<BasePageResponse<JobStatusTraceEvent>> findJobStatusTraceEvents(@RequestBody final FindJobStatusTraceEventsRequest requestParams) {
-        Page<JobStatusTraceEvent> jobStatusTraceEvents = eventTraceHistoryService.findJobStatusTraceEvents(requestParams);
-        return ResponseResultUtil.build(BasePageResponse.of(jobStatusTraceEvents));
+        return ResponseResultUtil.build(eventTraceHistoryService.findJobStatusTraceEvents(requestParams));
     }
     
     /**

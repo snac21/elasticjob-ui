@@ -17,16 +17,12 @@
 
 package org.apache.shardingsphere.elasticjob.lite.ui.domain;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -35,21 +31,16 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Entity
-@Table(name = "JOB_REGISTER_STATISTICS")
+@TableName("JOB_REGISTER_STATISTICS")
 public class JobRegisterStatistics {
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableId
     private Long id;
     
-    @Column(name = "registered_count", length = 11)
     private Integer registeredCount;
     
-    @Column(name = "statistics_time", nullable = false)
     private Date statisticsTime;
     
-    @Column(name = "creation_time", nullable = false)
     private Date creationTime = new Date();
     
     public JobRegisterStatistics(final Integer registeredCount, final Date statisticsTime) {

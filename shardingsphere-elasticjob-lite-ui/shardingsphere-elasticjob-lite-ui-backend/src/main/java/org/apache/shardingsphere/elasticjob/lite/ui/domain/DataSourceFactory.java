@@ -17,10 +17,10 @@
 
 package org.apache.shardingsphere.elasticjob.lite.ui.domain;
 
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.apache.commons.dbcp2.BasicDataSource;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 
 import javax.sql.DataSource;
 
@@ -38,7 +38,12 @@ public final class DataSourceFactory {
     public static DataSource createDataSource(final EventTraceDataSourceConfiguration config) {
         // Determine whether the data source is valid.
         new EventTraceDataSource(config).init();
-        return DataSourceBuilder.create().type(BasicDataSource.class).driverClassName(config.getDriver()).url(config.getUrl())
-            .username(config.getUsername()).password(config.getPassword()).build();
+        return DataSourceBuilder.create()
+                .type(HikariDataSource.class)
+                .driverClassName(config.getDriver())
+                .url(config.getUrl())
+                .username(config.getUsername())
+                .password(config.getPassword())
+                .build();
     }
 }

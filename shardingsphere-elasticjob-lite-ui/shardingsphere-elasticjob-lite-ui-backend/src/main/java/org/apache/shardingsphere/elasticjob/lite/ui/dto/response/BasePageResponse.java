@@ -21,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
 
 import java.io.Serializable;
 import java.util.List;
@@ -56,12 +55,15 @@ public class BasePageResponse<T> implements Serializable {
     }
     
     /**
-     * Create new BasePageResponse with Page.
-     * @param page match data info.
+     * Create new BasePageResponse with data, total, pageSize and pageNumber.
+     * @param data match data
+     * @param total total count
+     * @param pageSize page size
+     * @param pageNumber page number
      * @param <T> Data type
      * @return BasePageResponse
      */
-    public static <T> BasePageResponse of(final Page<T> page) {
-        return new BasePageResponse(page.getTotalElements(), page.getContent());
+    public static <T> BasePageResponse of(final List<T> data, final int total, final int pageSize, final int pageNumber) {
+        return new BasePageResponse((long) total, data);
     }
 }

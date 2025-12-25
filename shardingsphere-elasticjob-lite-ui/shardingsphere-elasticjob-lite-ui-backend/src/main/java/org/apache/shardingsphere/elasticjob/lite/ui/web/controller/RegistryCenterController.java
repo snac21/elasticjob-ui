@@ -17,7 +17,7 @@
 
 package org.apache.shardingsphere.elasticjob.lite.ui.web.controller;
 
-import org.apache.shardingsphere.elasticjob.lite.lifecycle.internal.reg.RegistryCenterFactory;
+import org.apache.shardingsphere.elasticjob.lifecycle.internal.reg.RegistryCenterFactory;
 import org.apache.shardingsphere.elasticjob.reg.exception.RegException;
 import org.apache.shardingsphere.elasticjob.lite.ui.domain.RegistryCenterConfiguration;
 import org.apache.shardingsphere.elasticjob.lite.ui.service.RegistryCenterConfigurationService;

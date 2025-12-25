@@ -17,72 +17,57 @@
 
 package org.apache.shardingsphere.elasticjob.lite.ui.domain;
 
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import org.apache.shardingsphere.elasticjob.tracing.event.JobStatusTraceEvent;
+import org.apache.shardingsphere.elasticjob.spi.tracing.event.JobStatusTraceEvent;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 import java.util.Date;
 
 @Data
-@Table(name = "JOB_STATUS_TRACE_LOG")
-@Entity
+@TableName("JOB_STATUS_TRACE_LOG")
 public class JobStatusTraceLog {
-    
-    @Id
+
+    @TableId
     private String id;
-    
-    @Column(name = "job_name")
+
     private String jobName;
-    
-    @Column(name = "original_task_id")
+
     private String originalTaskId;
-    
-    @Column(name = "task_id")
+
     private String taskId;
-    
-    @Column(name = "slave_id")
+
     private String slaveId;
-    
-    @Column(name = "source")
-    private String source;
-    
-    @Column(name = "execution_type")
+
     private String executionType;
-    
-    @Column(name = "sharding_item")
+
     private String shardingItem;
-    
-    @Column(name = "state")
+
     private String state;
-    
-    @Column(name = "message")
+
     private String message;
-    
-    @Column(name = "creation_time")
+
     private Date creationTime;
-    
+
     /**
      * JobStatusTraceLog convert to JobStatusTraceEvent.
      *
      * @return JobStatusTraceEvent entity
      */
     public JobStatusTraceEvent toJobStatusTraceEvent() {
-        return new JobStatusTraceEvent(
+        JobStatusTraceEvent event = new JobStatusTraceEvent(
                 id,
                 jobName,
                 originalTaskId,
                 taskId,
                 slaveId,
-                JobStatusTraceEvent.Source.valueOf(source),
-                executionType,
+                org.apache.shardingsphere.elasticjob.spi.executor.ExecutionType.valueOf(executionType),
                 shardingItem,
                 JobStatusTraceEvent.State.valueOf(state),
                 message,
                 creationTime
         );
+        return event;
     }
-    
+
 }
