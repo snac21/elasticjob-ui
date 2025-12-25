@@ -22,26 +22,56 @@ shardingsphere-elasticjob-lite-ui-frontend & shardingsphere-elasticjob-cloud-ui-
 shardingsphere-elasticjob-lite-ui-backend & shardingsphere-elasticjob-cloud-ui-backend 模块是标准的 Spring Boot 项目。
 
 ## 如何构建
-
-```bash
-git clone https://github.com/apache/shardingsphere-elasticjob-ui.git
-cd shardingsphere-elasticjob-ui/
-mvn clean package -Prelease
+## 先编译依赖项目
+```
+git clone https://github.com/snac21/elasticjob
+mvn clean -U install -DskipTests
 ```
 
-- 从 `shardingsphere-elasticjob-ui/shardingsphere-elasticjob-ui-distribution/shardingsphere-elasticjob-lite-ui-bin-distribution/target/apache-shardingsphere-${latest.release.version}-shardingsphere-elasticjob-lite-ui-bin.tar.gz` 中获取 lite 软件包。
-- 从 `shardingsphere-elasticjob-ui/shardingsphere-elasticjob-ui-distribution/shardingsphere-elasticjob-cloud-ui-bin-distribution/target/apache-shardingsphere-${latest.release.version}-shardingsphere-elasticjob-cloud-ui-bin.tar.gz` 中获取 cloud 软件包。
+### 再初始化数据库
+```
+CREATE TABLE `JOB_EXECUTION_LOG` (
+  `auto_id` int NOT NULL AUTO_INCREMENT,
+  `id` varchar(40) COLLATE utf8mb4_0900_bin NOT NULL,
+  `job_name` varchar(100) COLLATE utf8mb4_0900_bin NOT NULL,
+  `task_id` varchar(255) COLLATE utf8mb4_0900_bin NOT NULL,
+  `hostname` varchar(255) COLLATE utf8mb4_0900_bin NOT NULL,
+  `ip` varchar(50) COLLATE utf8mb4_0900_bin NOT NULL,
+  `sharding_item` int NOT NULL,
+  `execution_source` varchar(20) COLLATE utf8mb4_0900_bin NOT NULL,
+  `failure_cause` varchar(4000) COLLATE utf8mb4_0900_bin DEFAULT NULL,
+  `is_success` int NOT NULL,
+  `start_time` timestamp NULL DEFAULT NULL,
+  `complete_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`auto_id`),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
 
-## 如何连接事件追踪数据源
+CREATE TABLE `JOB_STATUS_TRACE_LOG` (
+  `auto_id` int NOT NULL AUTO_INCREMENT,
+  `id` varchar(40) COLLATE utf8mb4_0900_bin NOT NULL,
+  `job_name` varchar(100) COLLATE utf8mb4_0900_bin NOT NULL,
+  `original_task_id` varchar(255) COLLATE utf8mb4_0900_bin NOT NULL,
+  `task_id` varchar(255) COLLATE utf8mb4_0900_bin NOT NULL,
+  `slave_id` varchar(50) COLLATE utf8mb4_0900_bin NOT NULL,
+  `execution_type` varchar(20) COLLATE utf8mb4_0900_bin NOT NULL,
+  `sharding_item` varchar(100) COLLATE utf8mb4_0900_bin NOT NULL,
+  `state` varchar(20) COLLATE utf8mb4_0900_bin NOT NULL,
+  `message` varchar(4000) COLLATE utf8mb4_0900_bin DEFAULT NULL,
+  `creation_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`auto_id`),
+  KEY `TASK_ID_STATE_INDEX` (`task_id`(128),`state`)
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_bin;
 
-受协议限制，本项目无法直接添加部分数据库的 JDBC 驱动，需要用户自行添加，有两种方式：
+```
+### 然后配置数据库
+```
+在backend的src/main/resources/application.properties修改
 
-### 在 pom.xml 添加 JDBC 依赖项并构建项目
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/e-job?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=root
+```
 
-通过源码构建本项目，可以直接在 [shardingsphere-elasticjob-lite-ui/shardingsphere-elasticjob-lite-ui-backend/pom.xml](https://github.com/apache/shardingsphere-elasticjob-ui/blob/master/shardingsphere-elasticjob-lite-ui/shardingsphere-elasticjob-lite-ui-backend/pom.xml) 中直接添加所需的 JDBC 驱动依赖。
-
-### 在分发包的 ext-lib 目录中添加 JDBC 驱动 JAR
-
-1. 获取并解压 `apache-shardingsphere-${latest.release.version}-shardingsphere-elasticjob-lite-ui-bin.tar.gz`；
-2. 添加 JDBC 驱动 (例如 `mysql-connector-java-8.0.13.jar`) 到文件夹 `ext-lib`；
-3. 使用脚本 `bin/start.sh` 运行管理控制台。
+### 启动backend
