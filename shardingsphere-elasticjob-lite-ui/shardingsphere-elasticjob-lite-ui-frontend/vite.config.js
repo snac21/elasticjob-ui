@@ -48,4 +48,12 @@ export default defineConfig({
       },
     },
   },
+  test: {
+    environment: 'jsdom',
+    include: ['test/specs/**/*.spec.js'],
+    globals: true,
+    deps: {
+      inline: ['element-plus']
+    }
+  }
 });
